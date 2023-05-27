@@ -1,0 +1,80 @@
+#include <iostream>
+#include <string>
+#include <fstream>
+#include <Windows.h>
+using namespace std;
+string& appendChars(string& str, const char* s, size_t n)
+{
+ size_t len = str.size();
+ str.resize(len + n);
+ for (size_t i = 0; i < n; i++)
+ {
+ str[len + i] = s[i];
+ }
+ return str;
+}
+void task1()
+{
+ char arr[100];
+ string str;
+ cout << "Введіть рядок: ";
+ cin.getline(arr, 100);
+ str = arr;
+ appendChars(str, " World!", 7);
+ str.append(" Wellcome", 7);
+ cout << "Результат додавання рядків: " << str << endl;
+}
+//приводимо рядки до одного вигляду щоб уникнути проблем через регістр
+string processString(const string& s) {
+ string result = s;
+ int n = result.length();
+ for (int i = 0; i < n; i++) {
+ if (result[i] == ' ') { // замінюємо пробіли на підкреслення
+ result[i] = '_';
+ }
+ else if (result[i] >= 'a' && result[i] <= 'z') { // переводимо
+символи в верхній регістр
+ result[i] = toupper(result[i]);
+ }
+ }
+ return result;
+}
+// Функція, що перевіряє, чи міститься рядок s0 у рядку s
+bool containsString(const string& s, const string& s0) {
+ return s.find(s0) != string::npos; // повертаємо true, якщо рядок s 
+містить рядок s0
+}
+void task2() {
+ string s0;
+ cout << "Введіть рядок s0: ";
+ getline(cin, s0);
+ ifstream inputFile("input.txt");
+ ofstream outputFile("output.txt");
+ if (!inputFile.is_open()) {
+ cerr << "Помилка відкриття вхідного файлу" << endl;
+ }
+ if (!outputFile.is_open()) { // перевіряємо, чи вдалося відкрити
+вихідний файл
+ cerr << "Помилка відкриття вихідного файлу" << endl;
+ }
+ // Обробляємо рядок у файлі рядок за рядком та записуємо результат у 
+вихідний файл
+ string line;
+ while (getline(inputFile, line)) {
+ string processedLine = processString(line); // оброблюємо рядок
+ bool contains = containsString(processedLine, s0); // 
+перевіряємо, чи міститься s0 у обробленому рядку
+ outputFile << line << " - " << (contains ? "True" : "False") <<
+endl; // записуємо результат у вихідний файл
+ }
+ // Закриваємо файли
+ inputFile.close();
+ outputFile.close();
+}
+int main()
+{
+ SetConsoleCP(1251);
+ SetConsoleOutputCP(1251);
+ task1();
+ task2();
+}
