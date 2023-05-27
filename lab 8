@@ -1,0 +1,162 @@
+#include <iostream>
+#include <fstream>
+#include <Windows.h>
+using namespace std;
+const int M = 20, N = 20;
+void binaryInsertionSort(float arr[], int n)
+{
+ for (int i = 1; i < n; ++i)
+ {
+ float key = arr[i];
+ int left = 0, right = i - 1;
+ while (left <= right)
+ {
+ int mid = left + (right - left) / 2;
+ if (arr[mid] > key)
+ right = mid - 1;
+ else
+ left = mid + 1;
+ }
+ for (int j = i - 1; j >= left; --j)
+ arr[j + 1] = arr[j];
+ arr[left] = key;
+ }
+}
+void shiftArrayRight(int a[], int n) {
+ int last = a[n - 1]; 
+ for (int i = n - 1; i > 0; i--) {
+ a[i] = a[i - 1]; 
+ }
+ a[0] = last; 
+ cout << endl;
+}
+void get_mas1(int arr[], int& n, string filename) {
+ ifstream file(filename);
+ file >> n;
+ if (file.is_open()) {
+ for (int i = 0; i < n; i++) {
+ file >> arr[i];
+ }
+ file.close();
+ }
+ else {
+ cout << "Unable to open file" << endl;
+ }
+}
+void show_mas1(int arr[], int n, string filename) {
+ ofstream out(filename);
+ for (int i = 0; i < n; i++) {
+ out << arr[i] << " ";
+ }
+ cout << endl;
+}
+void show_mas3(float arr[], int n) {
+ for (int i = 0; i < n; i++) {
+ cout << arr[i] << " ";
+ }
+ cout << endl;
+}
+void get_mas2(int matrix[M][N], int& n, int& m, string filename) {
+ ifstream file(filename);
+ file >> m;
+ file >> n;
+ if (file.is_open()) {
+ for (int i = 0; i < m; i++) {
+ for (int j = 0; j < n; j++)
+ {
+ file >> matrix[i][j];
+ }
+ }
+ file.close();
+ }
+ else {
+ cout << "Unable to open file" << endl;
+ }
+}
+void get_mas3(float arr[], int& n, string filename) {
+ ifstream file(filename);
+ file >> n;
+ if (file.is_open()) {
+ for (int i = 0; i < n; i++) {
+ file >> arr[i];
+ }
+ file.close();
+ }
+ else {
+ cout << "Unable to open file" << endl;
+ }
+}
+void swap(int& a, int& b) 
+{
+ int temp;
+ temp = a;
+ a = b;
+ b = temp;
+}
+void task1() {
+ int n = 0;
+ int* a = new int[n];
+ get_mas1(a, n, "array_in_n.txt"); 
+ for (int i = 0; i < n / 2; i++)
+ {
+ swap(a[2 * i], a[2 * i + 1]); 
+ }
+ show_mas1(a, n, "array_out_n.txt");
+ delete[] a;
+}
+void task2() {
+ int matrix[M][N]{};
+ int Sum = 0,Num=0, cols = 0, rows = 0;
+ double Sred = 0;
+ get_mas2(matrix, cols, rows, "matr_in_n.txt"); // передаем поток
+ifstream вместо имени файла
+ ofstream out("matr_in_n.txt", ios::app);
+ for (int j = 0; j < cols; j++)
+ {
+ Sum = 0;
+ for (int i = 0; i < rows; i++) Sum += matrix[i][j];
+ Sred = Sum / cols;
+ Num = 0;
+ for (int i = 0; i < rows; i++)
+ {
+ if (matrix[i][j] > Sred) Num++;
+ }
+ out << j + 1 << " col:" << Num << endl;
+ }
+ out.close();
+}
+void task3() {
+ int n = 0;
+ float* arr = new float[n];
+ get_mas3(arr, n, "3.txt");
+ cout << "Масив до сортування:" << endl;
+ show_mas3(arr, n);
+ binaryInsertionSort(arr, n);
+ cout << "Масив після сортування:" << endl;
+ show_mas3(arr, n);
+}
+int main()
+{
+ SetConsoleCP(1251);
+ SetConsoleOutputCP(1251);
+ int menu;
+ do
+ {
+ cout << "Task number(0 for exit):";
+ cin >> menu;
+ switch (menu)
+ { // перемикання між завданнями
+ case 1:
+ task1();
+ break; // Завдання 1
+ case 2:
+ task2();
+ break; // Завдання 2
+ case 3:
+ task3();
+ break; // Завдання 3
+ }
+ } while (menu);
+ system("pause");
+ return 0;
+}
